@@ -1,6 +1,6 @@
 ---
 title: "Legible: a private coach that keeps you lip-readable on video calls"
-published: false
+published: true
 tags: presagechallenge, accessibility, electron, computervision
 cover_image: https://raw.githubusercontent.com/ainazulfiqar99acc/legible/main/docs/media/cover.png
 ---

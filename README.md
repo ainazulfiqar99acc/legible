@@ -6,6 +6,8 @@ People who lip-read need to see the speaker's face: turned towards them, lit fro
 
 Built with the [Presage SmartSpectra SDK](https://smartspectra.presagetech.com/docs) for the SmartSpectra SDK Challenge 2026.
 
+**Challenge write-up:** [Legible on DEV](https://dev.to/zedaina/legible-a-private-coach-that-keeps-you-lip-readable-on-video-calls-23j)
+
 ![Legible strip: a Face nudge, then readable again](docs/media/cover.png)
 
 **[▶ Narrated walkthrough on YouTube (3 min)](https://youtu.be/EnqeuEsMBN8)** ([MP4 in the repo](docs/media/legible-walkthrough.mp4)) — a synthetic, numbers-only replay driving the real app; narration by the open-source [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) voice model.
