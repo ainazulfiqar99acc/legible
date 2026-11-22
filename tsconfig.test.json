@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "types": [
+      "node"
+    ],
+    "noEmit": true
+  },
+  "include": [
+    "tests/unit/**/*.ts",
+    "windows/sensor/**/*.ts",
+    "shared/**/*.ts",
+    "rules/**/*.ts"
+  ],
+  "exclude": [
+    "windows/sensor/session.ts",
+    "windows/sensor/sdk.ts",
+    "windows/sensor/frameProbe.ts",
+    "windows/sensor/main.ts"
+  ]
+}

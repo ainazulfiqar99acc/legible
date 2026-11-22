@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": [
+      "vite/client"
+    ]
+  },
+  "include": [
+    "windows/**/*.ts",
+    "windows/**/*.tsx",
+    "shared/**/*.ts",
+    "rules/**/*.ts"
+  ]
+}

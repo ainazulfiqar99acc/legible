@@ -1,0 +1,101 @@
+html,
+body {
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+.strip {
+  width: 420px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+  background: var(--bg);
+  border: var(--rule);
+}
+
+.lights {
+  appearance: none;
+  display: flex;
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.msg {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  -webkit-app-region: drag;
+  cursor: grab;
+}
+.tags {
+  display: flex;
+  gap: 4px;
+  height: 16px;
+}
+.line {
+  font: 600 18px/22px var(--font-head);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.strip.issue .line {
+  color: var(--red);
+}
+.strip.error .line {
+  font-size: 16px;
+  line-height: 20px;
+  -webkit-line-clamp: 1;
+}
+.err-action {
+  -webkit-app-region: no-drag;
+  appearance: none;
+  align-self: flex-start;
+  border: 0;
+  padding: 0;
+  background: var(--yellow);
+  font: 600 13px/18px var(--font-head);
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.stop {
+  -webkit-app-region: no-drag;
+  appearance: none;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: var(--rule);
+  background: var(--bg);
+  color: var(--ink);
+  font: 600 11px/12px var(--font-head);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--t-colour);
+}
+.stop:hover {
+  background: var(--grey-light);
+}
+.line .sub {
+  display: block;
+  font: 600 15px/18px var(--font-head);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

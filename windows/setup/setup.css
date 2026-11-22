@@ -1,0 +1,173 @@
+.setup {
+  min-height: 100vh;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 12px;
+  background: var(--ink);
+  color: #ffffff;
+}
+.topbar .brand {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 0;
+  color: var(--yellow);
+  cursor: pointer;
+  padding: 4px;
+}
+.topbar nav {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+.topbar nav button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: #ffffff;
+  font: 600 14px/18px var(--font-head);
+  letter-spacing: 0.04em;
+  padding: 12px 10px 9px;
+  cursor: pointer;
+}
+.topbar nav button[aria-current='true'] {
+  border-bottom-color: var(--yellow);
+}
+main {
+  max-width: 580px;
+  margin: 0 auto;
+  outline: none;
+}
+.section {
+  padding: 24px 24px;
+}
+.hero h1 {
+  margin-top: 18px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+.small {
+  font-size: 14px;
+  line-height: 20px;
+}
+.link {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.ok {
+  font-size: 14px;
+}
+.err {
+  color: var(--red);
+}
+.consent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+.consent ul,
+.plain {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.consent li,
+.plain li {
+  margin-bottom: 4px;
+}
+.why {
+  border-left: 6px solid var(--yellow);
+  padding-left: 14px;
+  margin: 18px 0;
+}
+.steps {
+  padding-left: 22px;
+}
+.steps li {
+  margin-bottom: 6px;
+}
+.result {
+  border: var(--rule);
+  padding: 10px 12px;
+  margin-top: 8px;
+}
+.result.ok {
+  border-left: 10px solid var(--green);
+}
+.result.bad {
+  border-left: 10px solid var(--red);
+}
+
+/* Rehearsal */
+.rehearsal .progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.squares {
+  display: flex;
+  gap: 4px;
+}
+.squares i {
+  width: 22px;
+  height: 22px;
+  border: var(--rule);
+  display: inline-block;
+}
+.squares i.done {
+  background: var(--ink);
+}
+.squares i.now {
+  background: var(--yellow);
+}
+.sentence {
+  font: 600 28px/36px var(--font-head);
+  margin: 28px 0;
+  min-height: 72px;
+}
+.live {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+}
+.live .lights {
+  display: flex;
+  gap: 2px;
+}
+.live .line {
+  font: 600 18px/22px var(--font-head);
+}
+.baseline div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px dashed var(--ink);
+  padding: 6px 0;
+}
+.baseline dt,
+.baseline dd {
+  margin: 0;
+}

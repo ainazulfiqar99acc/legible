@@ -1,0 +1,89 @@
+.receipt {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 18px 16px 24px;
+}
+.receipt header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.receipt h1 {
+  font-size: 26px;
+  line-height: 30px;
+  margin: 0;
+}
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.dash {
+  border: 0;
+  border-top: 2px dashed var(--ink);
+  margin: 12px 0;
+}
+.lines {
+  margin: 0;
+}
+.lines .row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  line-height: 26px;
+  white-space: pre;
+}
+.lines dt,
+.lines dd {
+  margin: 0;
+}
+.big {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.pct {
+  font-size: 44px;
+  line-height: 48px;
+  font-weight: 600;
+}
+.small {
+  font-size: 13px;
+  line-height: 18px;
+}
+.center {
+  text-align: center;
+}
+.tip p {
+  margin: 4px 0 0;
+}
+.cmp {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 15px;
+}
+.cmp th,
+.cmp td {
+  text-align: right;
+  padding: 2px 0;
+}
+.cmp th:first-child,
+.cmp td:first-child {
+  text-align: left;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.actions .btn {
+  flex: 1;
+}
+@media print {
+  .receipt {
+    max-width: 80mm;
+  }
+}
