@@ -8,7 +8,7 @@ Built with the [Presage SmartSpectra SDK](https://smartspectra.presagetech.com/d
 
 ![Legible strip: a Face nudge, then readable again](docs/media/cover.png)
 
-**[▶ Narrated walkthrough (3 min, MP4)](docs/media/legible-walkthrough.mp4)** — a synthetic, numbers-only replay driving the real app; narration by the open-source [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) voice model.
+**[▶ Narrated walkthrough on YouTube (3 min)](https://youtu.be/EnqeuEsMBN8)** ([MP4 in the repo](docs/media/legible-walkthrough.mp4)) — a synthetic, numbers-only replay driving the real app; narration by the open-source [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) voice model.
 
 | The strip, docked under the webcam | The panel | After the call |
 | --- | --- | --- |

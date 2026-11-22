@@ -25,7 +25,7 @@ Nobody on the call sees anything. Legible coaches **your own visibility**. It sa
 
 ## Demo
 
-{% embed https://github.com/ainazulfiqar99acc/legible/raw/main/docs/media/legible-walkthrough.mp4 %}
+{% embed https://youtu.be/EnqeuEsMBN8 %}
 
 *(The narrated walkthrough plays a synthetic, numbers-only session through the real app, labelled REPLAY. Narration: the open-source Kokoro-82M voice model.)*
 
