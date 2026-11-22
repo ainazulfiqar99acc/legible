@@ -145,3 +145,39 @@ describe('replay determinism', () => {
     expect(b).toEqual(a);
   });
 });
+
+describe('long run without a breath pause (Pauses, from the breathing trace)', () => {
+  const r = replay('long-run');
+  it('nudges "Pause between sentences" once the talk run passes 25 s', () => {
+    const p = r.nudges.filter((n) => n.check === 'phrase');
+    expect(p.length).toBe(1);
+    expect(p[0]!.message).toBe('Pause between sentences');
+    expect(p[0]!.t).toBeGreaterThanOrEqual(25_000);
+    expect(p[0]!.t).toBeLessThan(27_000);
+  });
+  it('stays quiet once the speaker breathes between phrases', () => {
+    expect(r.nudges.filter((n) => n.t > 36_000)).toEqual([]);
+    const f = r.frames.find((x) => x.now >= 45_000 && x.out.speaking)!;
+    expect(f.out.lights.phrase).toBe('good');
+  });
+});
+
+describe('demo with a breathing trace', () => {
+  const r = replay('demo');
+  it('shows the Pauses light green while talking with normal breath pauses', () => {
+    const f = r.frames.find((x) => x.now >= 9_000 && x.out.speaking)!;
+    expect(f.out.lights.phrase).toBe('good');
+  });
+  it('never nudges Pauses, because the speaker breathes within 25 s', () => {
+    expect(r.nudges.some((n) => n.check === 'phrase')).toBe(false);
+  });
+});
+
+describe('Pauses without breathing data', () => {
+  it('shows "No data", never an issue, when the SDK sends no chest trace', () => {
+    const r = replay('turning-away');
+    const f = r.frames.find((x) => x.now >= 5_000 && x.out.speaking)!;
+    expect(f.out.lights.phrase).toBe('unknown');
+    expect(r.nudges.some((n) => n.check === 'phrase')).toBe(false);
+  });
+});

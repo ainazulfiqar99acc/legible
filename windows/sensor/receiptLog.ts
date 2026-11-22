@@ -26,7 +26,7 @@ export interface TickInput {
 export class ReceiptLog {
   totals: SessionTotals = { elapsedMs: 0, talkMs: 0, trackedTalkMs: 0, readableMs: 0, issueMs: zero(), nudges: zero() };
   private prev: TickInput | null = null;
-  private cells: Record<StripCheckId, TimelineCell[]> = { facing: [], light: [], distance: [], pace: [] };
+  private cells: Record<StripCheckId, TimelineCell[]> = { facing: [], light: [], distance: [], phrase: [] };
   private cellIndex = -1;
 
   /** Account for the interval since the previous tick using the previous tick's state. */
@@ -90,7 +90,7 @@ export class ReceiptLog {
       facing: [...this.cells.facing],
       light: [...this.cells.light],
       distance: [...this.cells.distance],
-      pace: [...this.cells.pace],
+      phrase: [...this.cells.phrase],
     };
   }
 

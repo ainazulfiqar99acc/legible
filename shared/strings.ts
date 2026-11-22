@@ -46,7 +46,7 @@ export const TIP: Record<CheckId | 'none', string> = {
   none: 'Nice work. Keep the same set-up for your next call.',
 };
 
-export const STRIP_ORDER: StripCheckId[] = ['facing', 'light', 'distance', 'pace'];
+export const STRIP_ORDER: StripCheckId[] = ['facing', 'light', 'distance', 'phrase'];
 
 export const WHY_POINTS: { title: string; body: string; source: string; url: string }[] = [
   {

@@ -152,14 +152,14 @@ export class Session {
       tracking: o?.tracking ?? false,
       trackingNote: o?.trackingNote ?? '',
       speaking: o?.speaking ?? false,
-      lights: o?.lights ?? { facing: 'untracked', light: 'untracked', distance: 'untracked', pace: 'untracked' },
+      lights: o?.lights ?? { facing: 'untracked', light: 'untracked', distance: 'untracked', phrase: 'untracked' },
       checks: o?.checks ?? { facing: 'unknown', light: 'unknown', distance: 'unknown', pace: 'unknown', occlusion: 'unknown', phrase: 'unknown' },
       nudge: o?.nudge ?? null,
       line: o?.line ?? LINE.starting,
       hint: o?.hint ?? '',
       error: this.error,
       totals: o?.totals ?? this.analyzer.receipt.totals,
-      timeline: o?.timeline ?? { facing: [], light: [], distance: [], pace: [] },
+      timeline: o?.timeline ?? { facing: [], light: [], distance: [], phrase: [] },
       mouth: o?.mouth ?? null,
       rehearsal: o?.rehearsal ?? null,
       tickHz: this.ticks.length,
@@ -168,7 +168,7 @@ export class Session {
     if (this.error) {
       base.line = this.error.title;
       base.nudge = null;
-      base.lights = { facing: 'untracked', light: 'untracked', distance: 'untracked', pace: 'untracked' };
+      base.lights = { facing: 'untracked', light: 'untracked', distance: 'untracked', phrase: 'untracked' };
     } else if (this.phase === 'starting' || (!this.faceSeen && !this.player && this.now() < 8000)) {
       base.line = this.phase === 'starting' ? LINE.starting : 'Looking for your face…';
     }

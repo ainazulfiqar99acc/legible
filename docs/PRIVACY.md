@@ -17,6 +17,10 @@ Before any camera access, Legible shows what it measures and what it never does.
 - The **Setup → Check** button and **Setup → Check this computer** (the SDK readiness check, ~25 s) open the camera for a moment and close it again. Neither runs on its own.
 - The panel's **Mirror** is off by default and is never recorded.
 
+## Breathing
+
+**Pauses** (on by default) asks the SDK for its chest breathing trace, computed on your computer from the same camera frames. Legible uses it only to notice long talk runs without a breath pause. The trace is not shown as a number, not stored (except inside the optional, off-by-default numbers-only recording), and nothing is said about health. Switch Pauses off in Settings and the breathing metrics are no longer requested.
+
 ## Microphone
 
 Never. Every `getUserMedia` call passes `audio: false`, the permission handler rejects any request that includes audio, and a unit test scans the source for audio capture.

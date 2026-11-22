@@ -52,4 +52,4 @@ HP Wide Vision HD Camera (0408:5482), Windows 11, one person at a desk, normal r
 
 > Does an app whose live behaviour is driven by face landmarks, talking detection and validation status meet the "at least one live Presage signal" rule?
 
-If the answer is no, switch on **Pauses** (F12) by default (`DEFAULT_SETTINGS.checks.phrase` in `shared/types.ts`). That requests the `breathingMetrics` bundle and drives "Pause between sentences" from the chest trace.
+**Decision (22 Nov 2026):** without waiting for the answer, **Pauses** (F12) is now **on by default** (`DEFAULT_SETTINGS.checks.phrase`) and is the fourth light on the strip, in the slot Pace used. Legible therefore always requests the `breathingMetrics` bundle and reacts live to the chest breathing trace: more than 25 s of talking without a pause containing an inhale → "Pause between sentences". Without a stable trace (e.g. `CHEST_NOT_VISIBLE` on a tightly framed laptop camera) the light shows "No data" and never nudges. Verified on synthetic fixtures (`long-run`, `demo`); **not yet verified on a real chest trace**.

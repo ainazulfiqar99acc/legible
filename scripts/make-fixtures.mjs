@@ -65,11 +65,13 @@ function face(t, { yaw = 0, scale = 1, aperture = 0.03, cx = FW / 2, cy = FH / 2
  * Build a recording from a timeline function: (tSeconds) => state
  * state = { talking, yaw, scale, rate (syllables/s), face (bool), code, faceLum, ringLum, mouthLum }
  */
-function build(name, durationS, stateAt, { seed = 1, baseline = DEFAULT_BASELINE, description = '', settings } = {}) {
+function build(name, durationS, stateAt, { seed = 1, baseline = DEFAULT_BASELINE, description = '', settings, breath = false } = {}) {
   const noise = rng(seed);
   const events = [];
   let phase = 0;
   let lastCode = null;
+  // chest breathing trace (arbitrary units): a slow exhale while talking, an inhale in every real pause
+  let chest = 0;
   for (let i = 0; i <= durationS * HZ; i++) {
     const t = (i * 1000) / HZ;
     const s = { talking: false, yaw: 0, scale: 1, rate: 3.5, face: true, code: 'OK', faceLum: 140, ringLum: 120, ...stateAt(t / 1000) };
@@ -86,6 +88,10 @@ function build(name, durationS, stateAt, { seed = 1, baseline = DEFAULT_BASELINE
     if (s.face) {
       events.push({ kind: 'face', sample: face(t, { yaw: s.yaw, scale: s.scale, aperture }, noise) });
       events.push({ kind: 'talking', t: r1(t), detected, stable: true });
+    }
+    if (breath) {
+      chest += s.talking ? -0.04 / HZ : 0.6 / HZ;
+      if (i % 3 === 0 && s.face) events.push({ kind: 'breath', t: r1(t), value: Math.round(chest * 1000) / 1000, stable: true });
     }
     if (i % (HZ / 2) === 0 && s.face) {
       const mouthLum = s.mouthLum ?? s.faceLum * 0.85;
@@ -179,19 +185,31 @@ build(
   { seed: 7, baseline: null, description: 'Eight sentences read facing the camera, used to test the baseline.' },
 );
 
+// 7b. Long run: 35 s of talking without a breath pause, then talking with a pause every ~7 s.
+build(
+  'long-run',
+  70,
+  (t) => ({ talking: t < 35 || (t >= 36.2 && !between(t % 7, 5.8, 7)) }),
+  {
+    seed: 9,
+    breath: true,
+    description: 'Talking for 35 s without a breath pause (Pauses nudge at ~25 s), then normal phrasing with a breath every ~7 s.',
+  },
+);
+
 // 8. Demo for judges: the whole story in 100 s.
 build(
   'demo',
   100,
   (t) => {
     if (t < 6) return { talking: false }; // listening
-    if (t < 16) return { talking: true }; // readable
+    if (t < 16) return { talking: between(t, 11.5, 12.7) ? false : true }; // readable, with one breath pause
     if (t < 21) return { talking: true, yaw: 32 }; // turned to second screen while talking -> Face
     if (t < 26) return { talking: true }; // back
     if (t < 34) return { talking: false, yaw: 40 }; // turned away while listening -> nothing
     if (t < 38) return { talking: true };
     if (t < 50) return { talking: true, faceLum: 72, ringLum: 210 }; // window behind -> Light
-    if (t < 56) return { talking: true };
+    if (t < 56) return { talking: !between(t, 52.5, 53.7) }; // a breath pause
     if (t < 64) return { talking: true, scale: 0.35 }; // leaned back (mouth ~2.9% of frame width) -> Distance
     if (t < 68) return { talking: false };
     if (t < 86) return { talking: true, rate: t > 70 ? 5.6 : 3.5 }; // rushing -> Pace
@@ -200,6 +218,7 @@ build(
   },
   {
     seed: 8,
+    breath: true,
     settings: { checks: { pace: true } }, // shows the experimental Pace check too
     description:
       'Synthetic demo: listening, readable, turning to a second screen while talking, turning away while silent, a window behind, leaning back, rushing, a second face.',

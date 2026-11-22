@@ -4,7 +4,7 @@
 /** The four checks on the strip, plus two optional ones. Order = priority. */
 export const CHECK_PRIORITY = ['facing', 'light', 'distance', 'pace', 'occlusion', 'phrase'] as const;
 export type CheckId = (typeof CHECK_PRIORITY)[number];
-export const STRIP_CHECKS = ['facing', 'light', 'distance', 'pace'] as const;
+export const STRIP_CHECKS = ['facing', 'light', 'distance', 'phrase'] as const;
 export type StripCheckId = (typeof STRIP_CHECKS)[number];
 
 /** A check never says "issue" unless it has the data to say so. */
@@ -111,7 +111,7 @@ export const DEFAULT_SETTINGS: Settings = {
   consentGiven: false,
   deviceId: null,
   deviceLabel: null,
-  checks: { facing: true, light: true, distance: true, pace: false, occlusion: false, phrase: false },
+  checks: { facing: true, light: true, distance: true, pace: false, occlusion: false, phrase: true },
   sensitivity: 'normal',
   stripPosition: 'top-center',
   stripFree: null,

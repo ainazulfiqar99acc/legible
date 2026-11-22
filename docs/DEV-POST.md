@@ -41,6 +41,10 @@ When you are hard to lip-read, one light turns red with one instruction. Fix it,
 
 ![Distance: "Move a little closer"](https://raw.githubusercontent.com/ainazulfiqar99acc/legible/main/docs/media/strip-distance.png)
 
+![Pauses: "Pause between sentences"](https://raw.githubusercontent.com/ainazulfiqar99acc/legible/main/docs/media/strip-pauses.png)
+
+The fourth light, **Pauses**, follows your **breathing**. If you talk for more than 25 seconds without a breath pause, it asks you to pause between sentences, which gives a lip-reader time to catch up.
+
 Click the lights for the panel, with what is happening now and a timeline of the call:
 
 | Now | Timeline |
@@ -57,7 +61,7 @@ Legible coaches **the speaker's visibility**. It says nothing about anyone's hea
 
 {% embed https://youtu.be/EnqeuEsMBN8 %}
 
-The narrated walkthrough plays a synthetic, numbers-only session through the real app, labelled **REPLAY**, so you can see every nudge in under three minutes. The narration uses the open-source Kokoro-82M voice model. The receipt above, and the measurements under *How It Responds to Human Signals*, come from a live session on a real webcam.
+The narrated walkthrough plays a synthetic, numbers-only session through the real app, labelled **REPLAY**, so you can see every nudge in under three minutes. *(It was recorded before **Pauses**, driven by the breathing trace, took the strip's fourth slot from the experimental Pace check; the screenshots in this post show the current strip.)* The narration uses the open-source Kokoro-82M voice model. The receipt above, and the measurements under *How It Responds to Human Signals*, come from a live session on a real webcam.
 
 ## Code
 
@@ -74,24 +78,25 @@ With a key: `npm start`, then Welcome → Use in a call → consent → paste ke
 
 ## How It Responds to Human Signals
 
-Legible runs the **SmartSpectra Node SDK 3.5.0** in a hidden Electron window and asks for exactly two live metrics, **`TALKING`** and **`FACE_LANDMARKS`**, plus the SDK's **validation status**. Every one of them drives a visible behaviour in real time:
+Legible runs the **SmartSpectra Node SDK 3.5.0** in a hidden Electron window and asks for three live signals, **`TALKING`**, **`FACE_LANDMARKS`** and the **chest breathing trace** (`breathingMetrics`), plus the SDK's **validation status**. Every one of them drives a visible behaviour in real time:
 
 | Live Presage signal | How the experience responds |
 | --- | --- |
 | **`TALKING`** (talking detection) | Gates everything. The lights judge you **only while SmartSpectra says you are talking**, with a 700 ms hangover. Turn away while you *listen* and nothing happens; start talking while turned and the Face nudge appears within about a second. This is also how Legible knows you are speaking **without a microphone**. |
 | **`FACE_LANDMARKS`** (478 points) | **Face:** head yaw from the nose tip vs. the outer eye corners (projected on the eye line so head *roll* doesn't count). More than 20° from your rehearsal baseline for 1 s → "Face the camera while you talk". **Distance:** mouth width (corners 61–291) below 3.5% of the frame for 3 s → "Move a little closer". **Light:** the face box tells a 160×90 brightness probe where your face is; face/background below 0.42, or face brightness below 45/255, for 3 s → "Light is behind you" / "Your face is too dark". |
+| **Breathing** (`breathingMetrics`, chest trace) | **Pauses:** Legible watches for the inhale in each gap between your phrases. More than 25 s of talking without a breath pause → "Pause between sentences". If the SDK can't see your chest, the light says "No data" and never nudges. |
 | **Validation status** | Codes that normally mean "this reading is unreliable" become coaching for a listener: `FACE_NOT_FORWARD` → Face, `TOO_DARK`/`TOO_BRIGHT` → Light, `FACE_TOO_FAR` → Distance. `NO_FACE_FOUND` and **`MULTIPLE_FACES_FOUND`** → a grey hatched **"Not tracking"**: judging stops, so Legible never assesses anyone but you. |
 
 ![Not tracking: more than one face](https://raw.githubusercontent.com/ainazulfiqar99acc/legible/main/docs/media/strip-not-tracking.png)
 
-**One nudge at a time.** A small engine sits between the signals and the strip. Priority is Face > Light > Distance. A nudge clears after 2 s of good state. There is at most one new nudge every 5 s, and the same nudge doesn't repeat within 30 s. It should feel like a tap on the shoulder, not an alarm. Time when Legible can't see exactly one face is left out of the receipt, so the readable percentage is honest.
+**One nudge at a time.** A small engine sits between the signals and the strip. Priority is Face > Light > Distance > Pauses. A nudge clears after 2 s of good state. There is at most one new nudge every 5 s, and the same nudge doesn't repeat within 30 s. It should feel like a tap on the shoulder, not an alarm. Time when Legible can't see exactly one face is left out of the receipt, so the readable percentage is honest.
 
 ### Integrating the SDK
 
 - **Main process:** `bindSmartSpectraIpc(sensorWindow)`. **Sensor preload:** `@smartspectra/node-sdk/preload`.
-- **Hidden sensor window:** `getUserMedia({ audio: false, video })`, then `new SmartSpectraSDK({ apiKey, requestedMetrics: [FACE_LANDMARKS, TALKING], enableTelemetry: false })`, `sdk.useMediaStream(stream)` and `await sdk.start()`.
-- **Events:** `sdk.on('metrics')` → `decodeMetrics()` → compact numbers-only events (7 landmark points + face box, the talking flag), and `sdk.on('validationStatus')`. The SDK's microsecond timestamps are mapped to session time.
-- **The analyser:** pure and deterministic. The same code runs live, in REPLAY mode (for judges without a key) and in 87 unit tests. Stop order: camera tracks first (the camera light goes off at once), then `sdk.stop()`, then `destroy()`.
+- **Hidden sensor window:** `getUserMedia({ audio: false, video })`, then `new SmartSpectraSDK({ apiKey, requestedMetrics: [FACE_LANDMARKS, TALKING, ...breathingMetrics], enableTelemetry: false })`, `sdk.useMediaStream(stream)` and `await sdk.start()`.
+- **Events:** `sdk.on('metrics')` → `decodeMetrics()` → compact numbers-only events (7 landmark points + face box, the talking flag, the chest trace from `breathing.upperTrace`), and `sdk.on('validationStatus')`. The SDK's microsecond timestamps are mapped to session time.
+- **The analyser:** pure and deterministic. The same code runs live, in REPLAY mode (for judges without a key) and in 92 unit tests. Stop order: camera tracks first (the camera light goes off at once), then `sdk.stop()`, then `destroy()`.
 - The window keeps `backgroundThrottling: false`, so it runs at about 30 Hz while hidden. Every SDK call is in one file, [`windows/sensor/sdk.ts`](https://github.com/ainazulfiqar99acc/legible/blob/main/windows/sensor/sdk.ts), checked against the installed typings ([`docs/SDK-NOTES.md`](https://github.com/ainazulfiqar99acc/legible/blob/main/docs/SDK-NOTES.md)).
 
 ### Tuned on a real face
@@ -107,7 +112,8 @@ I ran a scripted 3-minute live session on an HP laptop webcam: talking, turning 
 - **A wide-angle laptop camera makes everyone look far away.** My mouth was 5–6.6% of the frame width at a normal seat and about 2% leaning back, so the limit went from 6% to 3.5%.
 - **Ordinary rooms are mildly backlit** (face/background 0.55–0.65), so the backlight limit went from 0.6 to 0.42. A "face too dark" check now catches the light going off (brightness 75 → 25).
 - **Single-frame `MULTIPLE_FACES_FOUND` glitches** (31–78 ms) appeared with one person in the room. They are now debounced at 250 ms.
-- **Pace from lip movement failed:** fast speech opened my lips *less*. It is now off by default and labelled experimental. Three checks that work beat four that nag.
+- **Pace from lip movement failed:** fast speech opened my lips *less*. It is now off by default and labelled experimental, and its place on the strip went to **Pauses**, which uses the breathing trace instead.
+- **Pauses was added after this session.** It is verified on synthetic breathing traces (a 35 s run without a breath → one nudge at 25 s; normal phrasing → none). A real chest trace is the next thing to test, and a laptop camera that frames only the face may report the chest as not visible. In that case the light says "No data" rather than guessing.
 
 Replayed through the tuned rules, the same recording gave exactly the right nudges and no false ones. Each number sits in [`rules/thresholds.ts`](https://github.com/ainazulfiqar99acc/legible/blob/main/rules/thresholds.ts) next to its measurement.
 
@@ -134,6 +140,7 @@ Replayed through the tuned rules, the same recording gave exactly the right nudg
 
 - **Camera consent.** An in-app consent screen comes before any camera access. It lists what is measured and what is never done, and how to stop. Until you agree, the app's permission handler refuses camera access. Afterwards it grants **video only**.
 - **Visible camera state.** The camera is on only during Rehearsal or a session, marked by a yellow **CAM** tag. Stop, closing the strip, or **Ctrl/Cmd+Shift+L** turns it off.
+- **Breathing.** Pauses (on by default) asks the SDK for its chest breathing trace, computed on-device from the same frames. It is used only to notice long runs without a breath pause; it is never shown as a number, never stored, and says nothing about health. Switching Pauses off stops requesting it.
 - **No microphone, no recording, no screen capture.** `audio: false` everywhere, and microphone permission is always denied. Frames are never stored. The brightness probe reads a 160×90 copy twice a second and zeroes its pixels after use.
 - **Storage.** All data is in one local folder: settings, your rehearsal baseline (head angle and lip-movement numbers), receipts **you choose to Keep**, and the API key, **encrypted** with the OS keychain (Electron `safeStorage`). The key is only given to the hidden sensor window and never logged. An optional, **off-by-default** developer setting saves numbers-only recordings (a few landmark points, no images) for tuning.
 - **Sharing.** Nothing is sent to the people on your call or to any server of mine. The SmartSpectra SDK runs on-device and contacts Presage to check its licence.

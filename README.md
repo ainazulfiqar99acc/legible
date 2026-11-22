@@ -14,7 +14,7 @@ Built with the [Presage SmartSpectra SDK](https://smartspectra.presagetech.com/d
 
 | The strip, docked under the webcam | The panel | After the call |
 | --- | --- | --- |
-| ![Listening](docs/media/strip-listening.png)<br>![Face nudge](docs/media/strip-face.png)<br>![Light nudge](docs/media/strip-light.png)<br>![Distance nudge](docs/media/strip-distance.png)<br>![Not tracking](docs/media/strip-not-tracking.png) | ![Panel: Now](docs/media/panel-now.png) | ![Receipt from a real session](docs/media/receipt-real-session.png) |
+| ![Listening](docs/media/strip-listening.png)<br>![Face nudge](docs/media/strip-face.png)<br>![Light nudge](docs/media/strip-light.png)<br>![Distance nudge](docs/media/strip-distance.png)<br>![Pauses nudge](docs/media/strip-pauses.png)<br>![Not tracking](docs/media/strip-not-tracking.png) | ![Panel: Now](docs/media/panel-now.png) | ![Receipt from a real session](docs/media/receipt-real-session.png) |
 
 The receipt on the right is from a real 3-minute session on a laptop webcam (see [docs/RESULTS.md](docs/RESULTS.md)).
 
@@ -29,15 +29,16 @@ The receipt on the right is from a real 3-minute session on a laptop webcam (see
 | **Face** | "Face the camera while you talk" | Head yaw from landmarks (nose tip vs. eye corners) more than 20° from your rehearsal baseline for 1 s, or SDK `FACE_NOT_FORWARD` for 1.5 s |
 | **Light** | "Light is behind you" / "Your face is too dark" | Face vs. background brightness below 0.42, or face brightness below 45/255, for 3 s (160×90 frame, twice a second), or SDK `TOO_DARK` / `TOO_BRIGHT` for 1.5 s |
 | **Distance** | "Move a little closer" | Mouth width (landmarks 61–291) below 3.5% of frame width for 3 s, or SDK `FACE_TOO_FAR` |
+| **Pauses** | "Pause between sentences" | SmartSpectra's **chest breathing trace** (`breathingMetrics`): more than 25 s of talking without a pause that has an inhale in it. Shows "No data" (never an issue) if the SDK cannot see your chest |
 | **Pace** *(experimental, off by default)* | "Slow down a little" | Visible syllables (peaks in lip opening) per second of talking, over 10 s, more than 1.3× your rehearsal rate. On a real face fast talk opened the lips *less*, so this did not work; see [RESULTS](docs/RESULTS.md) |
 
 Every check is gated on SmartSpectra's **talking** signal, with a 700 ms hangover (hold timers survive pauses of up to 1.5 s between phrases). While you listen, the lights stay neutral and nothing is judged. When Legible cannot see exactly one face, it shows a grey hatched **Not tracking** state. It never shows an issue it cannot see, and it leaves that time out of the receipt.
 
-**Nudge engine:** one nudge at a time (priority Face > Light > Distance > Pace); a nudge clears after 2 s of good state; at most one new nudge every 5 s; the same nudge does not repeat within 30 s unless it lasted more than 10 s. All thresholds, with comments, are in [`rules/thresholds.ts`](rules/thresholds.ts).
+**Nudge engine:** one nudge at a time (priority Face > Light > Distance > Pauses); a nudge clears after 2 s of good state; at most one new nudge every 5 s; the same nudge does not repeat within 30 s unless it lasted more than 10 s. All thresholds, with comments, are in [`rules/thresholds.ts`](rules/thresholds.ts).
 
 **Receipt:** talk time, tracked talk time, **readable %** (tracked talk time with no active issue ÷ tracked talk time), top issue and one tip. Print, Keep or Discard.
 
-Optional checks (Settings): **Mouth** (experimental; hand over the mouth) and **Pauses** (long talk runs without a breath pause, using the SDK's chest breathing trace; turning it on requests the `breathingMetrics` bundle).
+Optional checks (Settings, off by default): **Pace** (experimental; see the table) and **Mouth** (experimental; hand over the mouth). **Pauses** is on by default and can be switched off; while it is on, Legible requests the `breathingMetrics` bundle.
 
 ## Run it
 
