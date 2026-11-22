@@ -27,7 +27,7 @@ We break all of this without noticing. We glance at a **second screen** mid-sent
 
 **2. Rehearse (1 minute).** Read eight short sentences out loud, such as *"The meeting will start at ten past nine."*. Legible learns how **you** normally hold your head, so a nudge means "you turned away from *your* normal". It works with no call at all, so you can fix your desk set-up first and compare practice receipts before and after.
 
-**3. Join your call.** Press Start or **Ctrl/Cmd+Shift+L**. The strip docks at the top of the screen, right under the webcam, where your eyes already are. Most of the time it does nothing.
+**3. Join your call.** Press **Use in a call** or **Ctrl/Cmd+Shift+L**. The strip docks at the top of the screen, right under the webcam, where your eyes already are. Most of the time it does nothing.
 
 | While you listen: neutral, nothing judged | While you talk and are readable |
 | --- | --- |
@@ -140,7 +140,7 @@ Replayed through the tuned rules, the same recording gave exactly the right nudg
 
 - **Camera consent.** An in-app consent screen comes before any camera access. It lists what is measured and what is never done, and how to stop. Until you agree, the app's permission handler refuses camera access. Afterwards it grants **video only**.
 - **Visible camera state.** The camera is on only during Rehearsal or a session, marked by a yellow **CAM** tag. Stop, closing the strip, or **Ctrl/Cmd+Shift+L** turns it off.
-- **Breathing.** Pauses (on by default) asks the SDK for its chest breathing trace, computed on-device from the same frames. It is used only to notice long runs without a breath pause; it is never shown as a number, never stored, and says nothing about health. Switching Pauses off stops requesting it.
+- **Breathing.** Pauses (on by default) asks the SDK for its chest breathing trace, computed on-device from the same frames. It is used only to notice long runs without a breath pause; it is never shown as a number, not stored (except in the optional, off-by-default numbers-only recording below), and says nothing about health. Switching Pauses off stops requesting it.
 - **No microphone, no recording, no screen capture.** `audio: false` everywhere, and microphone permission is always denied. Frames are never stored. The brightness probe reads a 160×90 copy twice a second and zeroes its pixels after use.
 - **Storage.** All data is in one local folder: settings, your rehearsal baseline (head angle and lip-movement numbers), receipts **you choose to Keep**, and the API key, **encrypted** with the OS keychain (Electron `safeStorage`). The key is only given to the hidden sensor window and never logged. An optional, **off-by-default** developer setting saves numbers-only recordings (a few landmark points, no images) for tuning.
 - **Sharing.** Nothing is sent to the people on your call or to any server of mine. The SmartSpectra SDK runs on-device and contacts Presage to check its licence.
